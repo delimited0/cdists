@@ -1,13 +1,21 @@
 rcwish <- function(n, Psi, nu, a, b) {
     d <- nrow(Psi)
     npairs <- choose(d, 2)
-    crcwish(n, Psi, nu, a, b, npairs)
+    if(n == 1) {
+        crcwish(n, Psi, nu, a, b, npairs)[,,1]
+    } else {
+        crcwish(n, Psi, nu, a, b, npairs)
+    }
 }
 
 propose_gwish <- function(n, Psi, nu, adj) {
     d <- nrow(Psi)
     npairs <- choose(d, 2)
-    cpropose_gwish(n, Psi, nu, adj, npairs)
+    if(n == 1) {
+        cpropose_gwish(n, Psi, nu, adj, npairs)[,,1]
+    } else {
+        cpropose_gwish(n, Psi, nu, adj, npairs)   
+    }
 }
 
 rtmvn <- function(n, Sigma, mu, a, b) {
