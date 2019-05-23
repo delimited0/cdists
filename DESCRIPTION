@@ -1,0 +1,13 @@
+Package: cdists
+Type: Package
+Title: Simulating from Multivariate Normal and Wishart Distributions with Linear Constraints
+Version: 1.0
+Date: 2019-05-23
+Author: Hillary Koch
+Maintainer: <hillary.koch01@gmail.com>
+Description: The package simulates fast and exact draws from the truncated multivariate normal, as well as a constrained Wishart distribution. It also makes fast and exact proposals for the G-Wishart distribution.
+License: Artistic-2.0
+Imports: Rcpp (>= 1.0.1)
+LinkingTo: Rcpp, RcppArmadillo, BH
+SystemRequirements:
+    C++11
