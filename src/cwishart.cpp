@@ -22,14 +22,18 @@ arma::cube crcwish(int n, arma::mat Sigma, double nu, arma::mat a, arma::mat b, 
     arma::cube out(d, d, n, arma::fill::zeros);
     double lb;
     double ub;
-    double term1;
-    double term2;
     double outterm1;
     double premult;
     double term4;
-    double outterm4;
-    double denom;
-    //double val;
+    double term1;
+    double term2;
+    double term3;
+    double innerterm;
+    double outerterm;
+    double innerterm2;
+    double outerterm2;
+
+
     int m;
     int p;
     normal standard_normal;
@@ -56,6 +60,7 @@ arma::cube crcwish(int n, arma::mat Sigma, double nu, arma::mat a, arma::mat b, 
             m = dimpairs(idx,0);
             p = dimpairs(idx,1);
             
+
             term1 = 0.0;
             term2 = 0.0;
             outterm1 = 0.0;
@@ -66,42 +71,50 @@ arma::cube crcwish(int n, arma::mat Sigma, double nu, arma::mat a, arma::mat b, 
                 for(auto i = m; i < p; i++) {
                     term4 += U(i,p) * A(i,m);
                 }
-                outterm4 = premult * term4;
-                denom = premult * U(p,p);
                 
                 if(a(m,p) == b(m,p)) {
-                    A(p,m) = (a(m,p) - outterm4) / denom;
+                    A(p,m) = ( ( a(m,p) / premult ) - term4 ) / U(p,p);
                 } else {
-                    lb = (a(m,p) - outterm4) / denom;
-                    ub = (b(m,p) - outterm4) / denom;
+                    lb = ( ( a(m,p) / premult ) - term4 ) / U(p,p);
+                    ub = ( ( b(m,p) / premult ) - term4 ) / U(p,p);
                     std::uniform_real_distribution<double> runif(cdf(standard_normal, lb), cdf(standard_normal, ub));
                     A(p,m) = quantile(standard_normal, runif(generator));
                 }
             } else {
+                term1 = 0.0;
                 for(auto k = 0; k < m; k++) {
-                    for(auto j = k; j <= m; j++) {
-                        term1 += U(j,m) * A(j,k);
+                    outerterm = 0.0;
+                    for(auto j=0; j <=k; j++) {
+                        innerterm = 0.0;
+                        for(auto i = j; i <= p; i++) {
+                            innerterm += (A(i,j) * U(i,p));
+                        }
+                        outerterm += (innerterm * A(k,j));
                     }
-                    for(auto i = k; i <= p; i++) {
-                        term2 += U(i,p) * A(i,k);
-                    }
-                    outterm1 += (term1 * term2);
+                    term1 += U(k,m) * outerterm;
                 }
-                
-                premult = U(m,m) * A(m,m);
-                
-                term4 = 0.0;
+
+                outerterm2 = 0.0;
+                for(auto j=0; j < m; j++) {
+                    innerterm2 = 0.0;
+                    for(auto i=j; i <= p; i++) {
+                        innerterm2 += (A(i,j) * U(i,p));
+                    }
+                    outerterm2 += (innerterm2 * A(m,j));
+                }
+                term2 = U(m,m) * outerterm2;
+
+                term3 = 0.0;
                 for(auto i = m; i < p; i++) {
-                    term4 += U(i,p) * A(i,m);
+                    term3 += (A(i,m) * U(i,p));
                 }
-                outterm4 = premult * term4;
-                denom = premult * U(p,p);
+                term3 *= (A(m,m) * U(m,m));
                 
                 if(a(m,p) == b(m,p)) {
-                    A(p,m) = (a(m,p) - outterm1 - outterm4) / denom;
+                    A(p,m) = (a(m,p) - term1 - term2 - term3) / (U(p,p) * U(m,m) * A(m,m));
                 } else {
-                    lb = (a(m,p) - outterm1 - outterm4) / denom;
-                    ub = (b(m,p) - outterm1 - outterm4) / denom;
+                    lb = (a(m,p) - term1 - term2 - term3) / (U(p,p) * U(m,m) * A(m,m));
+                    ub = (b(m,p) - term1 - term2 - term3) / (U(p,p) * U(m,m) * A(m,m));
                     std::uniform_real_distribution<double> runif(cdf(standard_normal, lb), cdf(standard_normal, ub));
                     A(p,m) = quantile(standard_normal, runif(generator));
                 }
@@ -126,7 +139,13 @@ arma::cube cpropose_gwish(int n, arma::mat Sigma, double nu, arma::mat a, int np
     double premult;
     double term4;
     double outterm4;
-    double denom;
+    double term3;
+    double innerterm;
+    double outerterm;
+    double innerterm2;
+    double outerterm2;
+    
+    
     int m;
     int p;
     normal standard_normal;
@@ -168,29 +187,38 @@ arma::cube cpropose_gwish(int n, arma::mat Sigma, double nu, arma::mat a, int np
                         term4 += U(i,p) * A(i,m);
                     }
                     outterm4 = premult * term4;
-                    denom = premult * U(p,p);
-                    A(p,m) = (-outterm4) / denom;
+                    A(p,m) = (-outterm4) / premult * U(p,p);
                 } else {
+                    term1 = 0.0;
                     for(auto k = 0; k < m; k++) {
-                        for(auto j = k; j <= m; j++) {
-                            term1 += U(j,m) * A(j,k);
+                        outerterm = 0.0;
+                        for(auto j=0; j <=k; j++) {
+                            innerterm = 0.0;
+                            for(auto i = j; i <= p; i++) {
+                                innerterm += (A(i,j) * U(i,p));
+                            }
+                            outerterm += (innerterm * A(k,j));
                         }
-                        for(auto i = k; i <= p; i++) {
-                            term2 += U(i,p) * A(i,k);
-                        }
-                        outterm1 += (term1 * term2);
+                        term1 += U(k,m) * outerterm;
                     }
                     
-                    premult = U(m,m) * A(m,m);
+                    outerterm2 = 0.0;
+                    for(auto j=0; j < m; j++) {
+                        innerterm2 = 0.0;
+                        for(auto i=j; i <= p; i++) {
+                            innerterm2 += (A(i,j) * U(i,p));
+                        }
+                        outerterm2 += (innerterm2 * A(m,j));
+                    }
+                    term2 = U(m,m) * outerterm2;
                     
-                    term4 = 0.0;
+                    term3 = 0.0;
                     for(auto i = m; i < p; i++) {
-                        term4 += U(i,p) * A(i,m);
+                        term3 += (A(i,m) * U(i,p));
                     }
-                    outterm4 = premult * term4;
-                    denom = premult * U(p,p);
-                    
-                    A(p,m) = (-outterm1 - outterm4) / denom;
+                    term3 *= (A(m,m) * U(m,m));
+
+                    A(p,m) = (-term1 - term2 - term3) / (U(p,p) * U(m,m) * A(m,m));
                 }
             }
         }
