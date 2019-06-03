@@ -52,11 +52,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// crtmvt
+arma::mat crtmvt(int n, arma::mat Sigma, arma::colvec mu, double nu, arma::colvec a, arma::colvec b);
+RcppExport SEXP _cdists_crtmvt(SEXP nSEXP, SEXP SigmaSEXP, SEXP muSEXP, SEXP nuSEXP, SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Sigma(SigmaSEXP);
+    Rcpp::traits::input_parameter< arma::colvec >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< arma::colvec >::type a(aSEXP);
+    Rcpp::traits::input_parameter< arma::colvec >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(crtmvt(n, Sigma, mu, nu, a, b));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cdists_crcwish", (DL_FUNC) &_cdists_crcwish, 6},
     {"_cdists_cpropose_gwish", (DL_FUNC) &_cdists_cpropose_gwish, 5},
     {"_cdists_crtmvn", (DL_FUNC) &_cdists_crtmvn, 5},
+    {"_cdists_crtmvt", (DL_FUNC) &_cdists_crtmvt, 6},
     {NULL, NULL, 0}
 };
 

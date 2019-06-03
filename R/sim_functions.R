@@ -22,3 +22,8 @@ rtmvn <- function(n, Sigma, mu, a, b) {
     samp <- crtmvn(n = n, Sigma = Sigma, mu = mu, a = a, b = b)
     sweep(samp, 2, mu, "+")
 }
+
+rtmvt <- function(n, Sigma, mu, nu, a, b) {
+    samp <- crtmvt(n = n, Sigma = Sigma, mu = mu, nu = nu, a = a, b = b)
+    sweep(samp, 2, mu, "+")
+}

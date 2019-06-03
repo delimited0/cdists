@@ -13,3 +13,7 @@ crtmvn <- function(n, Sigma, mu, a, b) {
     .Call(`_cdists_crtmvn`, n, Sigma, mu, a, b)
 }
 
+crtmvt <- function(n, Sigma, mu, nu, a, b) {
+    .Call(`_cdists_crtmvt`, n, Sigma, mu, nu, a, b)
+}
+
