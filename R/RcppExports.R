@@ -9,6 +9,14 @@ cpropose_gwish <- function(n, Sigma, nu, a, npairs) {
     .Call(`_cdists_cpropose_gwish`, n, Sigma, nu, a, npairs)
 }
 
+cr_ordinary_wish <- function(n, Sigma, nu, npairs) {
+    .Call(`_cdists_cr_ordinary_wish`, n, Sigma, nu, npairs)
+}
+
+cr_ordinary_mvn <- function(n, Sigma, mu) {
+    .Call(`_cdists_cr_ordinary_mvn`, n, Sigma, mu)
+}
+
 crtmvn <- function(n, Sigma, mu, a, b) {
     .Call(`_cdists_crtmvn`, n, Sigma, mu, a, b)
 }

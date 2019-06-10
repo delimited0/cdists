@@ -37,6 +37,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cr_ordinary_wish
+arma::cube cr_ordinary_wish(int n, arma::mat Sigma, double nu, int npairs);
+RcppExport SEXP _cdists_cr_ordinary_wish(SEXP nSEXP, SEXP SigmaSEXP, SEXP nuSEXP, SEXP npairsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Sigma(SigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< int >::type npairs(npairsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cr_ordinary_wish(n, Sigma, nu, npairs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cr_ordinary_mvn
+arma::mat cr_ordinary_mvn(int n, arma::mat Sigma, arma::colvec mu);
+RcppExport SEXP _cdists_cr_ordinary_mvn(SEXP nSEXP, SEXP SigmaSEXP, SEXP muSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Sigma(SigmaSEXP);
+    Rcpp::traits::input_parameter< arma::colvec >::type mu(muSEXP);
+    rcpp_result_gen = Rcpp::wrap(cr_ordinary_mvn(n, Sigma, mu));
+    return rcpp_result_gen;
+END_RCPP
+}
 // crtmvn
 arma::mat crtmvn(int n, arma::mat Sigma, arma::colvec mu, arma::colvec a, arma::colvec b);
 RcppExport SEXP _cdists_crtmvn(SEXP nSEXP, SEXP SigmaSEXP, SEXP muSEXP, SEXP aSEXP, SEXP bSEXP) {
@@ -72,6 +99,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_cdists_crcwish", (DL_FUNC) &_cdists_crcwish, 6},
     {"_cdists_cpropose_gwish", (DL_FUNC) &_cdists_cpropose_gwish, 5},
+    {"_cdists_cr_ordinary_wish", (DL_FUNC) &_cdists_cr_ordinary_wish, 4},
+    {"_cdists_cr_ordinary_mvn", (DL_FUNC) &_cdists_cr_ordinary_mvn, 3},
     {"_cdists_crtmvn", (DL_FUNC) &_cdists_crtmvn, 5},
     {"_cdists_crtmvt", (DL_FUNC) &_cdists_crtmvt, 6},
     {NULL, NULL, 0}

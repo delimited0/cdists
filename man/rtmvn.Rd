@@ -35,7 +35,7 @@ set.seed(3)
 d <- 5
 Sigma <- diag(d) * 2
 offdiags <- matrix(sample(c(.8, -.8), size = d * d, replace = TRUE), nrow = d, ncol = d)
-Sigma[lower.tri(Psi)] <- offdiags[lower.tri(offdiags)]
+Sigma[lower.tri(Sigma)] <- offdiags[lower.tri(offdiags)]
 Sigma <- Sigma + t(Sigma) + diag(d) * 8
 
 a <- rep(0, d)
