@@ -12,10 +12,11 @@ using namespace boost::math;
 using namespace Rcpp;
 using namespace RcppArmadillo;
 
+inline int randWrapper(const int n) { return floor(unif_rand()*n); }
 
 // [[Rcpp::export]]
 arma::cube cr_ordinary_wish(int n, arma::mat Sigma, double nu, int npairs) {
-    std::default_random_engine generator;
+    std::default_random_engine generator{(unsigned) randWrapper(INT_MAX)};
     int d = Sigma.n_rows;
     int m;
     int p;
