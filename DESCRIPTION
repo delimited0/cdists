@@ -10,5 +10,4 @@ License: Artistic-2.0
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp, RcppArmadillo, BH
 Suggests: BDgraph, LaplacesDemon
-SystemRequirements:
-    C++11
+SystemRequirements: C++11
