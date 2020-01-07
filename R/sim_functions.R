@@ -24,7 +24,8 @@ rtmvn <- function(n, Sigma, mu, a, b) {
 }
 
 rtmvt <- function(n, Sigma, mu, nu, a, b) {
-    samp <- crtmvt(n = n, Sigma = Sigma, mu = mu, nu = nu, a = a, b = b)
+    scale_term <- sqrt(nu / rchisq(n, df = nu))
+    samp <- crtmvt(n = n, Sigma = Sigma, mu = mu, nu = nu, a = a, b = b, scale_term = scale_term)
     sweep(samp, 2, mu, "+")
 }
 

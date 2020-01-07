@@ -1,35 +1,30 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::depends(BH)]]
 // [[Rcpp::plugins(cpp11)]]
 #include <RcppArmadillo.h>
-#include <random>
-#include <boost/math/distributions/normal.hpp>
-#include <boost/math/distributions/chi_squared.hpp>
 
-using namespace boost::math;
 using namespace Rcpp;
 using namespace RcppArmadillo;
 
 
 // [[Rcpp::export]]
-arma::mat crtmvt(int n, arma::mat Sigma, arma::colvec mu, double nu, arma::colvec a, arma::colvec b) {
-    std::default_random_engine generator;
+arma::mat crtmvt(int n, arma::mat Sigma, arma::colvec mu, double nu, arma::colvec a, arma::colvec b, arma::colvec scale_term) {
     int d = mu.size();
+    int use_lower;
     arma::mat L = chol(Sigma, "lower");
-    double A;
     arma::mat z(d, n, arma::fill::zeros);
-    double lb;
-    double ub;
-    normal standard_normal;
-    std::uniform_real_distribution<double> standard_uniform(0.0, 1.0);
+    double lb, log_lbnew;
+    double ub, log_ubnew;
     
-    chi_squared chidist(nu);
-    A = sqrt(nu / quantile(chidist, standard_uniform(generator)));
-    arma::mat AL = A * L;
-
+    double max_const;
+    NumericVector u(1);
+    NumericVector ru(1);
+    
+    arma::mat AL;
+    arma::mat out(d, n, arma::fill::none);
+    
     for(auto iteration = 0; iteration < n; iteration++){
+        AL = scale_term(iteration) * L;
         for(auto i = 0; i < d; i++) {
             lb = a(i) - mu(i);
             ub = b(i) - mu(i);
@@ -45,10 +40,24 @@ arma::mat crtmvt(int n, arma::mat Sigma, arma::colvec mu, double nu, arma::colve
                 lb /= AL(i,i);
                 ub /= AL(i,i);
             }
-            std::uniform_real_distribution<double> runif(cdf(standard_normal, lb), cdf(standard_normal, ub));
-            z(i, iteration) = quantile(standard_normal, runif(generator));
+
+            if(ub > 0){
+                use_lower = 0;
+            }
+            else{
+                use_lower = 1;
+            }
+
+            log_lbnew = R::pnorm(lb, 0.0, 1.0, use_lower, 1);
+            log_ubnew = R::pnorm(ub, 0.0, 1.0, use_lower, 1);
+            max_const = max(NumericVector::create(log_lbnew, log_ubnew));
+            ru = Rcpp::runif(1);
+            u = log(exp((log(1 - ru) + log_lbnew  - max_const)) + 
+                        exp((log(ru) + log_ubnew - max_const))) + max_const;
+            z(i, iteration) = as<double>(wrap(Rcpp::qnorm(u, 0.0, 1.0, use_lower, 1))); 
         }
+        out.col(iteration) = AL * (z.col(iteration));
     }
-    return((AL * z).t());
+    return(out.t());
 }
 
