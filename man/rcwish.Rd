@@ -4,7 +4,7 @@
 Simulate from a Wishart distribution with constraints on the off-diagonals
 }
 \description{
-The constraints on the off-diagonals $\rho$ take the form $a < \rho < b$ or $\rho = a$.
+The constraints on the off-diagonals $rho$ take the form $a < rho < b$ or $rho = a$.
 }
 \usage{
 rcwish(n, Psi, nu, a, b)

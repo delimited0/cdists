@@ -5,8 +5,8 @@ crcwish <- function(n, Sigma, nu, a, b, npairs) {
     .Call(`_cdists_crcwish`, n, Sigma, nu, a, b, npairs)
 }
 
-cpropose_gwish <- function(n, Sigma, nu, a, npairs) {
-    .Call(`_cdists_cpropose_gwish`, n, Sigma, nu, a, npairs)
+crgwish <- function(n, Sigma, nu, a, npairs) {
+    .Call(`_cdists_crgwish`, n, Sigma, nu, a, npairs)
 }
 
 cr_ordinary_wish <- function(n, Sigma, nu, npairs) {
@@ -21,7 +21,7 @@ crtmvn <- function(n, Sigma, mu, a, b) {
     .Call(`_cdists_crtmvn`, n, Sigma, mu, a, b)
 }
 
-crtmvt <- function(n, Sigma, mu, nu, a, b) {
-    .Call(`_cdists_crtmvt`, n, Sigma, mu, nu, a, b)
+crtmvt <- function(n, Sigma, mu, nu, a, b, scale_term) {
+    .Call(`_cdists_crtmvt`, n, Sigma, mu, nu, a, b, scale_term)
 }
 
