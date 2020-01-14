@@ -1,10 +1,10 @@
-\name{propose_gwish}
-\alias{propose_gwish}
+\name{rGwish}
+\alias{rGwish}
 \title{
-Make proposals for the G-Wishart distribution
+Make draws from the G-Wishart distribution
 }
 \usage{
-propose_gwish(n, Psi, nu, adj)
+rGwish(n, Psi, nu, adj)
 }
 \arguments{
   \item{n}{
@@ -37,5 +37,5 @@ An array of simulated matrices with zeros in the specified locations.
     nu <- d + 10
     Psi <- LaplacesDemon::rinvwishart(nu = nu, S = diag(d) * 2)
     
-    propose_gwish(10, Psi = Psi, nu = nu, adj = adj)    
+    rGwish(10, Psi = Psi, nu = nu, adj = adj)    
 }

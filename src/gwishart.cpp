@@ -8,7 +8,7 @@ using namespace RcppArmadillo;
 
 
 // [[Rcpp::export]]
-arma::cube cpropose_gwish(int n, arma::mat Sigma, double nu, arma::mat a, int npairs) {
+arma::cube crgwish(int n, arma::mat Sigma, double nu, arma::mat a, int npairs) {
 //    std::default_random_engine generator;
     int d = Sigma.n_rows;
     arma::mat U = chol(Sigma, "upper");

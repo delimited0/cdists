@@ -8,13 +8,13 @@ rcwish <- function(n, Psi, nu, a, b) {
     }
 }
 
-propose_gwish <- function(n, Psi, nu, adj) {
+rGwish <- function(n, Psi, nu, adj) {
     d <- nrow(Psi)
     npairs <- choose(d, 2)
     if(n == 1) {
-        cpropose_gwish(n, Psi, nu, adj, npairs)[,,1]
+        crgwish(n, Psi, nu, adj, npairs)[,,1]
     } else {
-        cpropose_gwish(n, Psi, nu, adj, npairs)   
+        crgwish(n, Psi, nu, adj, npairs)   
     }
 }
 
